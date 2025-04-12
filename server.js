@@ -18,6 +18,10 @@ app.get('/', (req, res) => {
 import studentRouter from "./routes/student.routes.js"
 app.use("/",studentRouter);
 
+import complaintRouter from './routes/complaint.router.js';
+app.use("/complaint",complaintRouter);
+
+
 app.listen(PORT, () => {
     console.log(`Server is running`);
 })
