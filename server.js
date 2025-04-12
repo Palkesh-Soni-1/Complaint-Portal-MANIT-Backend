@@ -21,6 +21,8 @@ app.use("/",studentRouter);
 import complaintRouter from './routes/complaint.router.js';
 app.use("/complaint",complaintRouter);
 
+import job from './cron.js';
+job.start();
 
 app.listen(PORT, () => {
     console.log(`Server is running`);
