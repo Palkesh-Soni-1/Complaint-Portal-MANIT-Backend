@@ -94,7 +94,7 @@ const studentLoginController = async (req, res) => {
 
       // Pahle saare(excluding first) profile-section par click krna expand krne ke liye
       const profileSections = await page.$$(".profile-section");
-      console.log(`Found ${profileSections.length} profile sections`);
+      // console.log(`Found ${profileSections.length} profile sections`);
 
       for (let i = 1; i < profileSections.length; i++) {
         console.log(`Processing profile section ${i}...`);
@@ -122,7 +122,7 @@ const studentLoginController = async (req, res) => {
             return dataMap;
           });
 
-          console.log(`Extracted data from section ${i}:`, sectionData);
+          // console.log(`Extracted data from section ${i}:`, sectionData);
 
           // merge data
           allProfileData = { ...allProfileData, ...sectionData };
