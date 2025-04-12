@@ -85,7 +85,7 @@ const studentLoginController = async (req, res) => {
 
       console.log(`Navigating to profile page: ${profileUrl}...`);
       await page.goto(profileUrl, { waitUntil: "networkidle2" });
-      // await new Promise((resolve) => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       console.log("Starting to extract profile data...");
 
