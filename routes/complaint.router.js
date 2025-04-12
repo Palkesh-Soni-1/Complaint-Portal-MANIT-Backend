@@ -1,7 +1,11 @@
 import express from "express";
 import complaintPostController from "../controllers/complaintPost.controller.js";
 import getComplaintsByIdController from "../controllers/getComplaintById.controller.js";
+import getAllComplaintsController from "../controllers/getAllComplaints.controller.js";
+import statusChangeController from "../controllers/statusChange.controller.js";
 const complaintRouter = express.Router();
 complaintRouter.post("/post",complaintPostController);
 complaintRouter.get("/get",getComplaintsByIdController);
+complaintRouter.get("/get/all",getAllComplaintsController);
+complaintRouter.patch("/status",statusChangeController);
 export default complaintRouter;
