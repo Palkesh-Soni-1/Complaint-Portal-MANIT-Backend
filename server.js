@@ -15,6 +15,9 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
+import studentRouter from "./routes/student.routes.js"
+app.use("/",studentRouter);
+
 app.listen(PORT, () => {
     console.log(`Server is running`);
 })
