@@ -21,6 +21,12 @@ app.use("/",studentRouter);
 import complaintRouter from './routes/complaint.router.js';
 app.use("/complaint",complaintRouter);
 
+import adminRouter from './routes/admin.routes.js';
+app.use("/admin",adminRouter);
+
+import superAdminRouter from './routes/superAdmin.routes.js';
+app.use("/superadmin",superAdminRouter);
+
 import job from './cron.js';
 job.start();
 

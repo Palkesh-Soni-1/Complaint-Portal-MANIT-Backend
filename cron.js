@@ -1,11 +1,10 @@
 import https from "https";
 import cron from "cron";
 
-const backendUrl = `${process.env.SITE}`;
 
 const job = new cron.CronJob("*/5 * * * *", function () {
   https
-    .get(backendUrl, (res) => {
+    .get(process.env.SITE, (res) => {
       if (res.statusCode === 200) {
         console.log("Successfully hit backend endpoint. Server is active.");
       } else {
