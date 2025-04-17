@@ -54,3 +54,28 @@ export async function authenticateSuperAdmin (req, res, next) {
     res.status(401).json({ message: "Token is not valid" });
   }
 };
+
+export async function authenticateStudent (req, res, next) {
+  try {
+    const token = req.header("Authorization")?.replace("Bearer ", "");
+    if (!token) {
+      return res
+        .status(401)
+        .json({ message: "No authentication token, access denied" });
+    }
+
+    const decoded = jwt.verify(token, process.env.SECRET || "secrett");
+    
+    const {studentId} = req.query;
+    console.log(decoded);
+    console.log(studentId);
+    if (decoded.id !== studentId) {
+      return res.status(401).json({ message: "Not authorized as student" });
+    }
+
+    next();
+  } catch (error) {
+    res.status(401).json({ message: "Token is not valid" });
+  }
+};
+
