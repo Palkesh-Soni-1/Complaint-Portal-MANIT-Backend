@@ -38,6 +38,11 @@ const statusChangeController = async (req, res) => {
       complaint.resolvingFeedback = feedback;
     }
 
+    if(status === "open"){
+      complaint.processed = false;
+      complaint.resolved = false;
+    }
+
     const savedComplaint = await complaint.save();
     res.status(200).json(savedComplaint);
   } catch (error) {
