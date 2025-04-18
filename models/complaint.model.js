@@ -30,15 +30,15 @@ const complaintSchema = mongoose.Schema(
     },
     processingFeedback: String,
 
-    closed: {
+    resolved: {
       type: Boolean,
       default: false,
     },
-    closedBy: {
+    resolvedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Admin",
     },
-    closingFeedback: String,
+    resolvingFeedback: String,
 
     createdAt: {
       type: Date,
