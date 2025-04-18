@@ -6,8 +6,10 @@ const getComplaintsByComplaintNumberController = async (req, res) => {
   try {
     const finalData = await Complaints.find({ complaintNumber });
     // console.log(finalData);
-    if(finalData.length<1) 
+    if(finalData.length<1) {
       res.status(400).json({ error: "Complaint not found" });
+      return;
+    }
     res.status(200).json({ data: finalData[0] });
   } catch (err) {
     res.status(500).json({ err: err });
