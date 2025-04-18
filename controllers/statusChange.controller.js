@@ -26,16 +26,16 @@ const statusChangeController = async (req, res) => {
     }
 
     // Handle closed status
-    if (status === "closed") {
+    if (status === "resolved") {
       if (!feedback) {
         return res
           .status(400)
-          .json({ message: "Closing feedback is required" });
+          .json({ message: "Resolving feedback is required" });
       }
 
-      complaint.closed = true;
-      complaint.closedBy = req.admin._id;
-      complaint.closingFeedback = feedback;
+      complaint.resolved = true;
+      complaint.resolvedBy = req.admin._id;
+      complaint.resolvingFeedback = feedback;
     }
 
     const savedComplaint = await complaint.save();
