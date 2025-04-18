@@ -67,8 +67,8 @@ export async function authenticateStudent (req, res, next) {
     const decoded = jwt.verify(token, process.env.SECRET || "secrett");
     
     const {studentId} = req.query;
-    console.log(decoded);
-    console.log(studentId);
+    // console.log(decoded);
+    // console.log(studentId);
     if (decoded.id !== studentId) {
       return res.status(401).json({ message: "Not authorized as student" });
     }
