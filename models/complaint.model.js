@@ -14,10 +14,24 @@ const complaintSchema = mongoose.Schema(
     description: String,
     dateReported: String,
     attachments: [String],
-    
+
+    assigned: {
+      type: Boolean,
+      default: false,
+    },
+    assignedTo: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Admin",
+    },
+    assignedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Intermediate",
+    },
+
     status: {
       type: String,
       default: "open",
+      enum: ["open", "processing", "resolved", "assigned", "rejected"],
     },
 
     processed: {

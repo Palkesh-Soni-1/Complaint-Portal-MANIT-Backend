@@ -1,6 +1,6 @@
 import Complaints from "../models/complaint.model.js";
 
-const getComplaintsByIdController = async (req,res) =>{
+const getComplaintsByStudentIdController = async (req,res) =>{
     const {studentId} = req.query;
     try{
         const finalData = await Complaints.find({ studentId }).sort({
@@ -12,4 +12,4 @@ const getComplaintsByIdController = async (req,res) =>{
         res.status(500).json({err:err});
     }
 }
-export default getComplaintsByIdController
+export default getComplaintsByStudentIdController

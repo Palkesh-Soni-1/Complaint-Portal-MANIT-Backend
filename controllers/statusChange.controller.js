@@ -12,6 +12,24 @@ const statusChangeController = async (req, res) => {
     // Update status
     complaint.status = status;
 
+    if(status==="rejected"){
+      const savedComplaint = await complaint.save();
+      res.status(200).json(savedComplaint);
+    }
+
+    if(status==="assigned"){
+      const {adminId} = req.body;
+      if(!adminId){
+        return res
+          .status(400)
+          .json({ message: "Admin Id is required" });
+      }
+      complaint.assigned = true;
+      complaint.assignedTo = adminId;
+      const savedComplaint = await complaint.save();
+      res.status(200).json(savedComplaint);
+    }
+
     // Handle processing status
     if (status === "processing") {
       if (!feedback) {
@@ -36,6 +54,15 @@ const statusChangeController = async (req, res) => {
       complaint.resolved = true;
       complaint.resolvedBy = req.admin._id;
       complaint.resolvingFeedback = feedback;
+    }
+
+    if(status === "open"){
+      complaint.assigned = false;
+      complaint.processed = false;
+      complaint.resolved = false;
+      complaint.assignedTo=null;
+      complaint.processedBy=null;
+      complaint.resolvedBy=null;
     }
 
     const savedComplaint = await complaint.save();

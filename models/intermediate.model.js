@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
-const adminSchema = new mongoose.Schema({
+const intermediateSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
@@ -50,7 +50,7 @@ const adminSchema = new mongoose.Schema({
 });
 
 // Pre-save hook to hash password before saving
-adminSchema.pre("save", async function (next) {
+intermediateSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
 
   try {
@@ -63,10 +63,10 @@ adminSchema.pre("save", async function (next) {
 });
 
 // Method to compare password
-adminSchema.methods.comparePassword = async function (candidatePassword) {
+intermediateSchema.methods.comparePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
-const Admin = mongoose.model("Admin", adminSchema);
+const Intermediate = mongoose.model("Intermediate", intermediateSchema);
 
-export default Admin
+export default Intermediate
