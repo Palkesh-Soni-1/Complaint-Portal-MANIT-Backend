@@ -3,6 +3,7 @@ const superAdminRouter = express.Router();
 import jwt from "jsonwebtoken"
 import SuperAdmin from "../models/superAdmin.model.js";
 import Admin from "../models/admin.model.js"
+import Intermediate from "../models/intermediate.model.js";
 import { authenticateSuperAdmin } from "../middlewares/auth.middleware.js";
 
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "2h";
@@ -312,6 +313,230 @@ superAdminRouter.delete(
       console.error(error);
       if (error.kind === "ObjectId") {
         return res.status(404).json({ message: "Admin not found" });
+      }
+      res.status(500).json({ message: "Server error" });
+    }
+  }
+);
+
+// Intermediate MANAGEMENT ROUTES
+
+// @route   POST /api/superadmin/intermediates
+// @desc    Create a new Intermediate
+// @access  Private (SuperAdmin only)
+superAdminRouter.post(
+  "/intermediates",
+  authenticateSuperAdmin,
+  async (req, res) => {
+    try {
+      const {
+        username,
+        password,
+        fullName,
+        role,
+        department,
+        hostel,
+        email,
+        contactNumber,
+      } = req.body;
+
+      if ( !username || !password || !fullName) {
+        return res
+          .status(400)
+          .json({ message: "Please enter all required fields" });
+      }
+
+      const existingIntermediate = await Intermediate.findOne({
+        $or: [{ username }, { email }],
+      });
+
+      if (existingIntermediate) {
+        return res
+          .status(400)
+          .json({
+            message: "Intermediate with this username or email already exists",
+          });
+      }
+
+      const newIntermediate = new Intermediate({
+        username,
+        password,
+        fullName,
+        role,
+        department,
+        email,
+        contactNumber,
+        hostel,
+      });
+
+      await newIntermediate.save();
+
+      res.status(201).json({
+        message: "Intermediate created successfully",
+        intermediate: {
+          id: newIntermediate._id,
+          username: newIntermediate.username,
+          fullName: newIntermediate.fullName,
+          role: newIntermediate.role,
+          department: newIntermediate.department,
+          email: newIntermediate.email,
+          contactNumber: newIntermediate.contactNumber,
+          isActive: newIntermediate.isActive,
+        },
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Server error" });
+    }
+  }
+);
+
+// @route   GET /api/superadmin/intermediates
+// @desc    Get all intermediate
+// @access  Private (SuperAdmin only)
+superAdminRouter.get(
+  "/intermediates",
+  authenticateSuperAdmin,
+  async (req, res) => {
+    try {
+      const intermediate = await Intermediate.find()
+        .select("-password")
+        .sort({ createdAt: -1 });
+      res.status(200).json(intermediate);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Server error" });
+    }
+  }
+);
+
+// @route   GET /api/superadmin/intermediates/:id
+// @desc    Get intermediate by ID
+// @access  Private (SuperAdmin only)
+superAdminRouter.get(
+  "/intermediates/:id",
+  authenticateSuperAdmin,
+  async (req, res) => {
+    try {
+      const intermediate = await Intermediate.findById(req.params.id).select("-password");
+
+      if (!intermediate) {
+        return res.status(404).json({ message: "Intermediate not found" });
+      }
+
+      res.status(200).json(intermediate);
+    } catch (error) {
+      console.error(error);
+      if (error.kind === "ObjectId") {
+        return res.status(404).json({ message: "Intermediate not found" });
+      }
+      res.status(500).json({ message: "Server error" });
+    }
+  }
+);
+
+// @route   PUT /api/superadmin/intermediates/:id
+// @desc    Update intermediate
+// @access  Private (SuperAdmin only)
+superAdminRouter.put(
+  "/intermediates/:id",
+  authenticateSuperAdmin,
+  async (req, res) => {
+    try {
+      const { fullName, role, department, email, contactNumber, isActive } =
+        req.body;
+
+      // Build intermediate object
+      const intermediateFields = {};
+      if (fullName) intermediateFields.fullName = fullName;
+      if (role) intermediateFields.role = role;
+      if (department) intermediateFields.department = department;
+      if (email) intermediateFields.email = email;
+      if (contactNumber) intermediateFields.contactNumber = contactNumber;
+      if (isActive !== undefined) intermediateFields.isActive = isActive;
+      intermediateFields.updatedAt = Date.now();
+
+      // Update intermediate
+      const intermediate = await Intermediate.findByIdAndUpdate(
+        req.params.id,
+        { $set: intermediateFields },
+        { new: true }
+      ).select("-password");
+
+      if (!intermediate) {
+        return res.status(404).json({ message: "Intermediate not found" });
+      }
+
+      res.status(200).json(intermediate);
+    } catch (error) {
+      console.error(error);
+      if (error.kind === "ObjectId") {
+        return res.status(404).json({ message: "Intermediate not found" });
+      }
+      res.status(500).json({ message: "Server error" });
+    }
+  }
+);
+
+// @route   PUT /api/superadmin/intermediates/:id/reset-password
+// @desc    Reset intermediate password
+// @access  Private (SuperAdmin only)
+superAdminRouter.put(
+  "/intermediates/:id/reset-password",
+  authenticateSuperAdmin,
+  async (req, res) => {
+    try {
+      const { newPassword } = req.body;
+
+      if (!newPassword) {
+        return res
+          .status(400)
+          .json({ message: "Please provide a new password" });
+      }
+
+      const intermediate = await Intermediate.findById(req.params.id);
+
+      if (!intermediate) {
+        return res.status(404).json({ message: "Intermediate not found" });
+      }
+
+      // Update password
+      intermediate.password = newPassword;
+      intermediate.updatedAt = Date.now();
+      await intermediate.save();
+
+      res.status(200).json({ message: "Password reset successfully" });
+    } catch (error) {
+      console.error(error);
+      if (error.kind === "ObjectId") {
+        return res.status(404).json({ message: "Intermediate not found" });
+      }
+      res.status(500).json({ message: "Server error" });
+    }
+  }
+);
+
+// @route   DELETE /api/superadmin/intermediates/:id
+// @desc    Delete intermediate
+// @access  Private (SuperAdmin only)
+superAdminRouter.delete(
+  "/intermediates/:id",
+  authenticateSuperAdmin,
+  async (req, res) => {
+    try {
+      const intermediate = await Intermediate.findById(req.params.id);
+
+      if (!intermediate) {
+        return res.status(404).json({ message: "Intermediate not found" });
+      }
+
+      await intermediate.deleteOne();
+
+      res.status(200).json({ message: "Intermediate removed" });
+    } catch (error) {
+      console.error(error);
+      if (error.kind === "ObjectId") {
+        return res.status(404).json({ message: "Intermediate not found" });
       }
       res.status(500).json({ message: "Server error" });
     }
