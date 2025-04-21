@@ -3,7 +3,7 @@ import express from "express";
 // Complaints Controller ------------------------------
 import complaintPostController from "../controllers/complaintPost.controller.js";
 import getComplaintsByStudentIdController from "../controllers/getComplaintByStudentId.controller.js";
-import getComplaintsByComplaintNumberController from "../controllers/getComplaintByComplaintNumber.controller.js";
+import getComplaintsByComplaintIdController from "../controllers/getComplaintByComplaintId.controller.js";
 import getAssignedComplaintsController from "../controllers/getAssignedComplaints.controller.js";
 import getOpenComplaintsController from "../controllers/getOpenComplaint.controller.js";
 
@@ -21,7 +21,7 @@ complaintRouter.get(
   authenticateStudent,
   getComplaintsByStudentIdController
 );
-complaintRouter.get("/getID",authenticateStudent,getComplaintsByComplaintNumberController);
+complaintRouter.get("/getById",authenticateStudent,getComplaintsByComplaintIdController);
 
 
 // Intermediate Routes ----------------------------------
