@@ -30,6 +30,7 @@ complaintRouter.get("/getById",authenticateStudent,getComplaintsByComplaintIdCon
 // Intermediate Routes ------------------------------------
 complaintRouter.get("/get/open",authenticateIntermediate,getOpenComplaintsController);
 complaintRouter.patch("/intermediate/status",authenticateIntermediate,statusChangeController);
+complaintRouter.patch("/intermediate/bulkStatus",authenticateIntermediate,bulkStatusChangeController);
 
 
 // Admin Routes -------------------------------------------
