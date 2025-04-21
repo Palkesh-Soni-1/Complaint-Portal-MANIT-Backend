@@ -1,10 +1,10 @@
 import Complaints from "../models/complaint.model.js";
 
-const getComplaintsByComplaintNumberController = async (req, res) => {
-  const { complaintNumber } = req.query;
-  console.log(complaintNumber);
+const getComplaintsByComplaintIdController = async (req, res) => {
+  const { complaintId } = req.query;
+  console.log(complaintId);
   try {
-    const finalData = await Complaints.find({ complaintNumber });
+    const finalData = await Complaints.find({ _id:complaintId });
     // console.log(finalData);
     if(finalData.length<1) {
       res.status(400).json({ error: "Complaint not found" });
@@ -15,4 +15,4 @@ const getComplaintsByComplaintNumberController = async (req, res) => {
     res.status(500).json({ err: err });
   }
 };
-export default getComplaintsByComplaintNumberController;
+export default getComplaintsByComplaintIdController;
