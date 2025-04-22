@@ -54,6 +54,24 @@ const complaintSchema = mongoose.Schema(
     },
     resolvingFeedback: String,
 
+    rejected: {
+      type: Boolean,
+      default: false,
+    },
+    rejectedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Intermediate",
+    },
+    rejectingFeedback: String,
+
+    isStudentFeedback:{
+      type:Boolean,
+      default:false
+    },
+    studentFeedback:{
+      type:String
+    },
+
     createdAt: {
       type: Date,
       default: Date.now,
