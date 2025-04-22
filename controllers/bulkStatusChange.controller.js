@@ -57,7 +57,12 @@ const bulkStatusChangeController = async (req, res) => {
         // Handle different status cases
         switch (status) {
           case "rejected":
-            // Nothing additional needed for rejected status
+            complaint.assigned = false;
+            complaint.processed = false;
+            complaint.resolved = false;
+            complaint.assignedTo = null;
+            complaint.processedBy = null;
+            complaint.resolvedBy = null;
             break;
 
           case "assigned":
