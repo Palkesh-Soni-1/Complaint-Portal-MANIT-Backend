@@ -13,6 +13,9 @@ const statusChangeController = async (req, res) => {
     complaint.status = status;
 
     if(status==="rejected"){
+      complaint.rejected=true;
+      complaint.rejectionFeedback=feedback;
+      complaint.rejectedBy=req.intermediate._id;
       const savedComplaint = await complaint.save();
       res.status(200).json(savedComplaint);
     }
